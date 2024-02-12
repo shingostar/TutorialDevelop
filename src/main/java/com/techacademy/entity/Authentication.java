@@ -4,10 +4,9 @@ import java.sql.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data

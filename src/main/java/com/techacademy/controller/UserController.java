@@ -1,6 +1,6 @@
 package com.techacademy.controller;
 
-import java.util.Set;
+import java.util.Set; // 追加
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam; // 追加
 
 import com.techacademy.entity.User;
 import com.techacademy.service.UserService;
@@ -54,25 +54,36 @@ public class UserController {
         // 一覧画面にリダイレクト
         return "redirect:/user/list";
     }
-    // ----- 変更ここまで -----
+
 
     /** User更新画面を表示 */
     @GetMapping("/update/{id}/")
-    public String getUser(@PathVariable("id") Integer id, Model model) {
+    public String getUser(@PathVariable("id") Integer id, Model model, User user) {
         // Modelに登録
+        if(id!=null) {
         model.addAttribute("user", service.getUser(id));
+        }
+        else {
+            model.addAttribute("useu", user);
+        }
         // User更新画面に遷移
         return "user/update";
     }
 
     /** User更新処理 */
     @PostMapping("/update/{id}/")
-    public String postUser(User user) {
+    public String postUser(@Validated User user,BindingResult res, Model model) {
+        if(res.hasErrors()) {
+                // エラーあり
+                return getUser(null, model,user);
+        }
         // User登録
         service.saveUser(user);
         // 一覧画面にリダイレクト
         return "redirect:/user/list";
     }
+
+    // ----- 追記:ここから -----
 
     /** User削除処理 */
     @PostMapping(path="list", params="deleteRun")
@@ -82,4 +93,5 @@ public class UserController {
         // 一覧画面にリダイレクト
         return "redirect:/user/list";
     }
+    // ----- 追記:ここまで -----
 }

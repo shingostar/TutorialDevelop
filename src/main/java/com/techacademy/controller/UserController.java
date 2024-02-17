@@ -51,7 +51,7 @@ public class UserController {
         //一覧画面にリダイレクト
         return "redirect:/user/list";
     }
-    //🔲課題確認用
+    //課題確認用
     /** User更新画面を表示 */
     //@GetMapping("/update/{id}/")
     //public String getUser(@PathVariable("id") Integer id, Model model) {
@@ -74,16 +74,17 @@ public class UserController {
     public String getUser(@PathVariable("id") Integer id, Model model) {
         //課題ではif文にチェックします
         //課題ではidにnullがセットされた状態です
-        User user = null;
+        //idがnullではない時サービスから取得したUserをセットする
         if (id != null) {
-            user = service.getUser(id);
-        } else {
-            user = (User) model.asMap().get("user");
+        model.addAttribute("user",service.getUser(id));
+        }
+       else {
+        model.addAttribute(model);
         }
         // Modelに登録 元のサンプルです
         // model.addAttribute("user", service.getUser(id));
         // Modelに登録
-        model.addAttribute("user", user);
+        //model.addAttribute("user", user);
         // User更新画面に遷移
         return "user/update";
     }
@@ -91,12 +92,11 @@ public class UserController {
     @PostMapping("/update/{id}/")
     public String postUser(@Validated User user, BindingResult res, Model model) {
         if (res.hasErrors()) {
-            //エラーあり,修正前のコード
-            //return getUser(user, null, model);
             //エラーあり,修正後のコード
-            return getUser(null,model);
-        }
-        //User登録
+            Integer id = null;
+            return getUser(id, model);
+            }
+        //エラーなしのUser登録
         service.saveUser(user);
         //一覧画面にリダイレクト
         return "redirect:/user/list";
@@ -107,7 +107,7 @@ public class UserController {
     public String deleteRun(@RequestParam(name="idck") Set<Integer> idck, Model model) {
         //Userを一括削除
         service.deleteUser(idck);
-        //一覧画面位リダイレクト
+        //一覧画面にリダイレクト
         return "redirect:/user/list";
     }
 }

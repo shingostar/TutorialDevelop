@@ -34,7 +34,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // ----- 追加:ここから -----
     /** Userの削除を行なう */
     @Transactional
     public void deleteUser(Set<Integer> idck) {
@@ -42,5 +41,4 @@ public class UserService {
             userRepository.deleteById(id);
         }
     }
-    // ----- 追加:ここまで -----
 }

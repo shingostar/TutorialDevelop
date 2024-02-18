@@ -50,7 +50,7 @@ class UserControllerTest {
     @WithMockUser
     void testGetUser() throws Exception {
         // HTTPリクエストに対するレスポンスの検証
-        MvcResult result = mockMvc.perform(get("/user/update/1/")) // URLにアクセス
+        MvcResult resultA = mockMvc.perform(get("/user/update/1/")) // URLにアクセス
             .andExpect(status().isOk()) // ステータスを確認
             .andExpect(model().attributeExists("user")) // Modelの内容を確認
             .andExpect(model().hasNoErrors()) // Modelのエラー有無の確認
@@ -59,17 +59,17 @@ class UserControllerTest {
 
         // userの検証
         // Modelからuserを取り出す
-        User user = (User)result.getModelAndView().getModel().get("user");
+        User user = (User)resultA.getModelAndView().getModel().get("user");
         assertEquals(user.getId(), 1);
         assertEquals(user.getName(), "キラメキ太郎");
     }
-
+    // 以下はL18の課題の内容
     @Test
     @DisplayName("User一覧画面")
     @WithMockUser
     void testGetList() throws Exception {
         // HTTPリクエストに対するレスポンスの検証
-        MvcResult result = mockMvc.perform(get("/user/list")) // URLにアクセス
+        MvcResult resultB = mockMvc.perform(get("/user/list")) // URLにアクセス
             .andExpect(status().isOk()) // ステータスを確認
             .andExpect(model().attributeExists("userlist")) // Modelの内容を確認
             .andExpect(model().hasNoErrors()) // Modelのエラー有無の確認
@@ -78,12 +78,18 @@ class UserControllerTest {
 
         // userの検証
         // Modelからuserlistを取り出す
-        List<User> userlist = (List<User>)result.getModelAndView().getModel().get("userlist");
-        assertEquals(userlist.get(0).getId(),1);
-        assertEquals(userlist.get(0).getName(),"キラメキ太郎");
-        assertEquals(userlist.get(1).getId(),2);
-        assertEquals(userlist.get(1).getName(),"キラメキ次郎");
-        assertEquals(userlist.get(2).getId(),3);
-        assertEquals(userlist.get(2).getName(),"キラメキ花子");
+        List<User> userlist = (List<User>)resultB.getModelAndView().getModel().get("userlist");
+
+        // userlistの件数を確認
+        assertEquals(3, userlist.size());
+
+    assertEquals(userlist.get(0).getId(),1);
+    assertEquals(userlist.get(0).getName(),"キラメキ太郎");
+    assertEquals(userlist.get(1).getId(),2);
+    assertEquals(userlist.get(1).getName(),"キラメキ次郎");
+    assertEquals(userlist.get(2).getId(),3);
+    assertEquals(userlist.get(2).getName(),"キラメキ花子");
+
+
     }
 }
